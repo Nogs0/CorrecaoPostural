@@ -20,8 +20,10 @@ def calcularAngulo(a, b, c):
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 
-video_path_in = 'agachamento.mp4'
-video_path_out = 'video_processado.mp4' # Nome do arquivo de saída
+video_path_in = '../agachamento_eu4.mp4'
+video_path_out = '../video_processado.mp4' # Nome do arquivo de saída
+
+videoVertical = True;
 
 cap = cv2.VideoCapture(video_path_in)
 
@@ -29,8 +31,13 @@ if not cap.isOpened():
     print(f"Erro ao abrir o arquivo de vídeo: {video_path_in}")
 else:
     # Pega as propriedades do vídeo original (largura, altura, FPS)
+    
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    if videoVertical:
+        frame_width = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        frame_height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    
     fps = int(cap.get(cv2.CAP_PROP_FPS))
 
     # Define o codec e cria o objeto VideoWriter
@@ -49,102 +56,49 @@ else:
             if not success:
                 break
 
+            if videoVertical:
+                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
             height, width, _ = frame.shape
             # Processa o frame
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = pose.process(frame_rgb)
             
-            # Desenha a pose no frame
-            if results.pose_landmarks:
-                # 1. Defina a lista dos pontos que você quer desenhar
-                pontos_de_interesse = [
-                    mp_pose.PoseLandmark.LEFT_SHOULDER, 
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    mp_pose.PoseLandmark.LEFT_HIP,
-                    mp_pose.PoseLandmark.LEFT_KNEE,
-                    mp_pose.PoseLandmark.LEFT_ANKLE,
-                ]
-
-                # 2. Percorra a lista de pontos de interesse e desenhe cada um
-                for landmark_enum in pontos_de_interesse:
-                    # Pega o objeto do landmark correspondente da lista de resultados
-                    landmark = results.pose_landmarks.landmark[landmark_enum.value]
-                    
-                    # Converte as coordenadas normalizadas para pixels
-                    cx = int(landmark.x * width)
-                    cy = int(landmark.y * height)
-                    
-                    # Desenha o círculo no ponto, apenas se ele estiver visível
-                    if landmark.visibility > 0.5:
-                        cv2.circle(frame, (cx, cy), radius=5, color=(0, 255, 0), thickness=-1)
-                
-                conexoes_de_interesse = [
-                    # Tronco
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_HIP),
-                    # Braços
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
-                    (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
-                    # Pernas
-                    (mp_pose.PoseLandmark.LEFT_HIP, mp_pose.PoseLandmark.LEFT_KNEE),
-                    (mp_pose.PoseLandmark.LEFT_KNEE, mp_pose.PoseLandmark.LEFT_ANKLE),
-                ]
-
-                # 2. Percorra a lista de conexões e desenhe cada linha
-                for conexao in conexoes_de_interesse:
-                    ponto_inicial = results.pose_landmarks.landmark[conexao[0].value]
-                    ponto_final = results.pose_landmarks.landmark[conexao[1].value]
-
-                    # Converte para coordenadas de pixel
-                    p1_x, p1_y = int(ponto_inicial.x * width), int(ponto_inicial.y * height)
-                    p2_x, p2_y = int(ponto_final.x * width), int(ponto_final.y * height)
-                    # Desenha a linha se ambos os pontos estiverem visíveis
-                    if ponto_inicial.visibility > 0.5 and ponto_final.visibility > 0.5:
-                        cv2.line(frame, (p1_x, p1_y), (p2_x, p2_y), color=(255, 255, 0), thickness=2)    
+            if results.pose_landmarks: 
             
                 landmarks = results.pose_landmarks.landmark
                 
-                joelho_esq = landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]
-                joelho_esq_x = int(joelho_esq.x * width)
-                joelho_esq_y = int(joelho_esq.y * height)
-                joelho_esq_visibility = joelho_esq.visibility
+                joelho_dir = landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value]
+                joelho_dir_x = int(joelho_dir.x * width)
+                joelho_dir_y = int(joelho_dir.y * height)
                 
-                cotovelo_esq = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
-                cotovelo_esq_x = int(cotovelo_esq.x * width)
-                cotovelo_esq_y = int(cotovelo_esq.y * height)
-                cotovelo_esq_visibility = cotovelo_esq.visibility
+                ombro_dir = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
+                ombro_dir_x = int(ombro_dir.x * width)
+                ombro_dir_y = int(ombro_dir.y * height)
                 
-                ombro_esq = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
-                ombro_esq_x = int(ombro_esq.x * width)
-                ombro_esq_y = int(ombro_esq.y * height)
-                ombro_esq_visibility = ombro_esq.visibility
+                quadril_dir = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+                quadril_dir_x = int(quadril_dir.x * width)
+                quadril_dir_y = int(quadril_dir.y * height)
                 
-                quadril_esq = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-                quadril_esq_x = int(quadril_esq.x * width)
-                quadril_esq_y = int(quadril_esq.y * height)
-                quadril_esq_visibility = quadril_esq.visibility
+                tornozelo_dir = landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value]
+                tornozelo_dir_x = int(tornozelo_dir.x * width)
+                tornozelo_dir_y = int(tornozelo_dir.y * height)
                 
-                tornozelo_esq = landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value]
-                tornozelo_esq_x = int(tornozelo_esq.x * width)
-                tornozelo_esq_y = int(tornozelo_esq.y * height)
-                tornozelo_esq_visibility = tornozelo_esq.visibility
+                dedao_dir = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
+                dedao_dir_x = int(dedao_dir.x * width)
+                dedao_dir_y = int(dedao_dir.y * height)
                 
-                dedao_esq = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
-                dedao_esq_x = int(dedao_esq.x * width)
-                dedao_esq_y = int(dedao_esq.y * height)
-                dedao_esq_visibility = dedao_esq.visibility
+                anguloJoelho = calcularAngulo([quadril_dir_x, quadril_dir_y], [joelho_dir_x, joelho_dir_y], [tornozelo_dir_x, tornozelo_dir_y])
+                pontoVerticalQuadril = (quadril_dir_x, quadril_dir_y + 0.5)
+                anguloTroncoRelVertical = calcularAngulo([ombro_dir_x, ombro_dir_y], [quadril_dir_x, quadril_dir_y], pontoVerticalQuadril)
+                anguloTornozelo = calcularAngulo([joelho_dir_x, joelho_dir_y], [tornozelo_dir_x, tornozelo_dir_y], [dedao_dir_x, dedao_dir_y])
                 
-                anguloJoelho = calcularAngulo([quadril_esq_x, quadril_esq_y], [joelho_esq_x, joelho_esq_y], [tornozelo_esq_x, tornozelo_esq_y])
-                anguloTronco = calcularAngulo([ombro_esq_x, ombro_esq_y], [quadril_esq_x, quadril_esq_y], [joelho_esq_x, joelho_esq_y])
-                
-                threshold_angle = 160 # Limiar para ver se a pessoa está em pé 
+                threshold_angle = 170 # Limiar para ver se a pessoa está em pé 
                 
                 # Lógica de transição de estados
                 if anguloJoelho > threshold_angle and statusDoAgachamento == 'DOWN':
                     statusDoAgachamento = 'UP'
                     contadorDeRepeticoes += 1
-                    # A repetição acabou, o valor em anguloMinimoJoelho é o final
-                    print(f"Repetição {contadorDeRepeticoes} | Ângulo Mín Joelho: {anguloMinimoJoelho:.2f} | Ângulo Mín Tronco: {anguloMinimoTronco:.2f}")
 
                 if anguloJoelho < threshold_angle and statusDoAgachamento == 'UP':
                     statusDoAgachamento = 'DOWN'
@@ -156,46 +110,30 @@ else:
                 if statusDoAgachamento == 'DOWN':
                     if anguloJoelho < anguloMinimoJoelho:
                         anguloMinimoJoelho = anguloJoelho
-                    if anguloTronco < anguloMinimoTronco:
-                        anguloMinimoTronco = anguloTronco
+                    if anguloTroncoRelVertical < anguloMinimoTronco:
+                        anguloMinimoTronco = anguloTroncoRelVertical
 
-                # --- VISUALIZAÇÃO DO STATUS NA TELA ---
                 # Caixa do contador
-                cv2.rectangle(frame, (0, 0), (200, 120), (245, 117, 16), -1)                
+                cv2.rectangle(frame, (0, 0), (180, 120), (245, 117, 16), -1)                
                 # Texto do contador
-                cv2.putText(frame, 'REPETICOES', (15, 25), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 1, cv2.LINE_AA)
-                cv2.putText(frame, str(contadorDeRepeticoes), (20, 90), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3, cv2.LINE_AA)
-                
-                # Caixa do angulo mínimo joelho
-                cv2.rectangle(frame, (width - 300, 0), (width, 120), (245, 117, 16), -1)
-
-                # Texto do ângulo mínimo
-                cv2.putText(frame, 'ANGULO MIN JOELHO', (width - 300, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 1, cv2.LINE_AA)
-                cv2.putText(frame, f"{anguloMinimoJoelho:.1f}", (width - 300, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3, cv2.LINE_AA)
-                
-                # Caixa do angulo mínimo tronco
-                cv2.rectangle(frame, (width - 300, 200), (width, 320), (245, 117, 16), -1)
-                
-                cv2.putText(frame, 'ANGULO MIN TRONCO', (width - 300, 225), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 1, cv2.LINE_AA)
-                cv2.putText(frame, f"{anguloMinimoTronco:.1f}", (width - 300, 290), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3, cv2.LINE_AA)
-                 
-                
-                
-                # anguloTronco = calcularAngulo([ombro_esq_x, ombro_esq_y], [quadril_esq_x, quadril_esq_y], [joelho_esq_x, joelho_esq_y])
-                # anguloTronco_text = f"Angulo do Tronco: {anguloTronco:.2f}"
-                # quadril_pixel = (int(quadril_esq_x * width), int(quadril_esq_y * height))
-                
-                # feedback = "Movimento correto"
-                # cor_feedback = (0, 255, 0)
-                # if anguloTronco < 100:
-                #     feedback = "Inclinado demais"
-                #     cor_feedback = (0, 0, 255)
+                cv2.putText(frame, 'REPETICOES', (15, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 1, cv2.LINE_AA)
+                cv2.putText(frame, str(contadorDeRepeticoes), (72, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 3, cv2.LINE_AA)
                     
-                # cv2.putText(frame, anguloTronco_text, (quadril_pixel[0] - 80, quadril_pixel[1] - 50), cv2.FONT_HERSHEY_SIMPLEX, 1, cor_feedback, 2, cv2.LINE_AA)
+                cor_feedback = (0, 255, 0)
+                if anguloTroncoRelVertical < 135:
+                    cor_feedback = (0, 0, 255)    
+                                
+                cv2.putText(frame, f"{anguloTroncoRelVertical:.2f}", (quadril_dir_x, quadril_dir_y), cv2.FONT_HERSHEY_SIMPLEX, 1, cor_feedback, 2, cv2.LINE_AA)
                 
-                # cv2.putText(frame, feedback, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, cor_feedback, 2, cv2.LINE_AA)
+                cor_feedback = (0, 255, 0)
+                if anguloJoelho < 60:
+                    cor_feedback = (0, 0, 255)  
+                cv2.putText(frame, f"{anguloJoelho:.2f}", (joelho_dir_x, joelho_dir_y), cv2.FONT_HERSHEY_SIMPLEX, 1, cor_feedback, 2, cv2.LINE_AA)
+                
+                cor_feedback = (0, 255, 0)
+                if anguloTornozelo < 45:
+                    cor_feedback = (0, 0, 255)  
+                cv2.putText(frame, f"{anguloTornozelo:.2f}", (tornozelo_dir_x, tornozelo_dir_y), cv2.FONT_HERSHEY_SIMPLEX, 1, cor_feedback, 2, cv2.LINE_AA)
 
             out.write(frame)
 
