@@ -16,6 +16,20 @@ h1 {
     color: #d6f51c;
 }
 
+#containerInicialOpcoes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+    justify-content: space-evenly;
+}
+
+#containerAnalise {
+    display: none;
+    flex-direction: column;
+}
+
 #liveView {
     position: relative;
     width: 90vw; /* Largura padrão, pode ser ajustada */
@@ -30,13 +44,13 @@ h1 {
     display: none; 
 }
 
-#output_canvas {
+#outputCanvas {
     width: 90vw;
     height: 100%;
     border-radius: 8px;
 }
 
-#feedbackContainer {
+.containerFeedback {
     display: none;
     justify-content: space-around;
     width: 90vw;
@@ -77,17 +91,33 @@ h1 {
     text-align: center;
 }
 
-#buttonReiniciar {
-    display: none;
+.buttonOpcoesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.buttonDefault {
     border-radius: 8px;
     background-color: #121212;
     color: #d6f51c;
     font-weight: bold;
-    width: 50%;
+    width: 70%;
+    font-size: 20px;
+    border: 2px solid black;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#buttonReload {
+    width: 50% !important;
     position: absolute;
     bottom: 20px;
     left: 25%;
     z-index: 9999;
     font-size: 20px;
-    border: 2px solid black;
+    display: none;
 }

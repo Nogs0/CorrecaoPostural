@@ -4,37 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisador de Exercícios</title>
+    <title>Analisador postural</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- <h1>Analisador de Exercícios com MediaPipe</h1>
-    <p>Aponte a câmera para você e comece a praticar!</p> -->
-
-    <div id="liveView" class="videoView">
-        <video id="webcam" autoplay playsinline></video>
-        <canvas id="output_canvas">
-        </canvas>
-        <button id="buttonReiniciar" onclick="window.location.reload()">Reiniciar</button>
-        <p id="fedbackSobreImagem"></p>
-    </div>
-
-    <div id="feedbackContainer">
-        <div class="feedbackBox">
-            <h2>REPS</h2>
-            <p id="rep-count">0</p>
+    <div id="containerInicialOpcoes">
+        <div>
+            <h1>Olá, seja bem vindo ao analisador postural...</h1>
+            <p>Você pode escolher entre as seguintes opções:</p>
         </div>
-        <div class="feedbackBox">
-            <h2>PROFUNDIDADE</h2>
-            <p id="depth-feedback">Inicie</p>
-        </div>
-        <div class="feedbackBox">
-            <h2>POSTURA</h2>
-            <p id="posture-feedback">Inicie</p>
+        <div class="buttonOpcoesContainer">
+            <button class="buttonDefault" id="opcaoAgachamento" onclick="escolherExercicio(0)">AGACHAMENTO</button>
+            <button class="buttonDefault" id="opcaoRosca" onclick="escolherExercicio(1)">ROSCA UNILATERAL</button>
         </div>
     </div>
-
+    <div id="containerAnalise">
+        <div id="liveView" class="videoView">
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="outputCanvas">
+            </canvas>
+            <button class="buttonDefault" id="buttonReload" onclick="window.location.reload()">Reiniciar</button>
+            <p id="fedbackSobreImagem"></p>
+        </div>
+        <div id="containerFeedbackAgachamento" class="containerFeedback">
+            <div class="feedbackBox">
+                <h2>REPS</h2>
+                <p id="repCount">0</p>
+            </div>
+            <div class="feedbackBox">
+                <h2>PROFUNDIDADE</h2>
+                <p id="depthFeedback">Inicie</p>
+            </div>
+            <div class="feedbackBox">
+                <h2>POSTURA</h2>
+                <p id="postureFeedback">Inicie</p>
+            </div>
+        </div>
+        <div id="containerFeedbackRosca" class="containerFeedback">
+            <div class="feedbackBox">
+                <h2>REPS</h2>
+                <p id="repCountRosca">0</p>
+            </div>
+            <div class="feedbackBox">
+                <h2>FEEDBACK</h2>
+                <p id="analiseFeedbackRosca">Inicie</p>
+            </div>
+        </div>
+    </div>
     <script type="module" src="./script.js"></script>
 </body>
 
