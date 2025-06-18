@@ -1,0 +1,93 @@
+body {
+    font-family: sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+h1 {
+    color: #d6f51c;
+}
+
+#liveView {
+    position: relative;
+    width: 90vw; /* Largura padrão, pode ser ajustada */
+    height: 80vh; /* Altura padrão */
+    border: 2px solid #d6f51c;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#webcam {
+    /* O vídeo original fica escondido, pois vamos desenhar tudo no canvas */
+    display: none; 
+}
+
+#output_canvas {
+    width: 90vw;
+    height: 100%;
+    border-radius: 8px;
+}
+
+#feedbackContainer {
+    display: none;
+    justify-content: space-around;
+    width: 90vw;
+    height: 10vh;
+    margin-top: 20px;
+}
+
+.feedbackBox {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    width: 80px;
+}
+
+.feedbackBox h2 {
+    margin: 0 0 10px 0;
+    font-size: 10px;
+    color: #d6f51c;
+}
+
+.feedbackBox p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#fedbackSobreImagem {
+    font-size: 30px;
+    color: #d6f51c;
+    font-weight: bold;
+    position: absolute;
+    z-index: 999;
+    background-color: #121212;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+}
+
+#buttonReiniciar {
+    display: none;
+    border-radius: 8px;
+    background-color: #121212;
+    color: #d6f51c;
+    font-weight: bold;
+    width: 50%;
+    position: absolute;
+    bottom: 20px;
+    left: 25%;
+    z-index: 9999;
+    font-size: 20px;
+    border: 2px solid black;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Exercícios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- <h1>Analisador de Exercícios com MediaPipe</h1>
+    <p>Aponte a câmera para você e comece a praticar!</p> -->
+
+    <div id="liveView" class="videoView">
+        <video id="webcam" autoplay playsinline></video>
+        <canvas id="output_canvas">
+        </canvas>
+        <button id="buttonReiniciar" onclick="window.location.reload()">Reiniciar</button>
+        <p id="fedbackSobreImagem"></p>
+    </div>
+
+    <div id="feedbackContainer">
+        <div class="feedbackBox">
+            <h2>REPS</h2>
+            <p id="rep-count">0</p>
+        </div>
+        <div class="feedbackBox">
+            <h2>PROFUNDIDADE</h2>
+            <p id="depth-feedback">Inicie</p>
+        </div>
+        <div class="feedbackBox">
+            <h2>POSTURA</h2>
+            <p id="posture-feedback">Inicie</p>
+        </div>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
